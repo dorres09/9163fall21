@@ -28,7 +28,9 @@ void animate(char *msg, unsigned char *program) {
             case 0x00:
                 break;
             case 0x01:
-                regs[arg1] = *mptr;
+		//fuzzer
+		if (arg1 < 16)
+                	regs[arg1] = *mptr;
                 break;
             case 0x02:
                 *mptr = regs[arg1];
@@ -37,16 +39,26 @@ void animate(char *msg, unsigned char *program) {
                 mptr += (char)arg1;
                 break;
             case 0x04:
-                regs[arg2] = arg1;
+		//fuzzer
+		if (arg2 < 16)
+                	regs[arg2] = arg1;
                 break;
             case 0x05:
-                regs[arg1] ^= regs[arg2];
-                zf = !regs[arg1];
-                break;
+		//fuzzer
+		if (arg1 < 16 && arg2 < 16)
+		{
+                	regs[arg1] ^= regs[arg2];
+                	zf = !regs[arg1];
+		}
+		break;
             case 0x06:
-                regs[arg1] += regs[arg2];
-                zf = !regs[arg1];
-                break;
+                //fuzzer
+		if (arg1 < 16 && arg2 < 16)
+		{
+			regs[arg1] += regs[arg2];
+                	zf = !regs[arg1];
+		}
+		break;
             case 0x07:
                 puts(msg);
                 break;
